@@ -1,0 +1,9 @@
+/build/
+
+.env
+.env.local
+
+.vscode/
+.idea/
+
+.log

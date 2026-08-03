@@ -1,0 +1,37 @@
+services:
+  # Наше Go-приложение
+  - type: web
+    name: golibrary-web
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: DB_HOST
+        fromDatabase:
+          name: golibrary-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: golibrary-db
+          property: port
+      - key: DB_USER
+        fromDatabase:
+          name: golibrary-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: golibrary-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: golibrary-db
+          property: database
+
+# Управляемая база данных PostgreSQL
+databases:
+  - name: golibrary-db
+    databaseName: golibrary
+    user: postgres
+    plan: free
