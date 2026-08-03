@@ -12,14 +12,28 @@ import (
 )
 
 func Load() string {
+	// На Render файла .env нет, поэтому ошибки просто логируем без паники
 	if err := godotenv.Load(); err != nil {
-		log.Printf("Строка пустая или не найден .env", err)
+		log.Println("Информация: .env файл не найден, считываем переменные из ОС")
 	}
-	DBUrl := os.Getenv("DATABASE_URL")
-	if DBUrl == "" {
-		// log.Fatal("Переменная пустая!")
+
+	dbUrl := os.Getenv("DATABASE_URL")
+
+	// Если DATABASE_URL пустой, пробуем собрать из отдельных переменных Render
+	if dbUrl == "" {
+		dbHost := os.Getenv("DB_HOST")
+		dbPort := os.Getenv("DB_PORT")
+		dbUser := os.Getenv("DB_USER")
+		dbPass := os.Getenv("DB_PASSWORD")
+		dbName := os.Getenv("DB_NAME")
+
+		if dbHost != "" && dbUser != "" {
+			dbUrl = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
+				dbUser, dbPass, dbHost, dbPort, dbName)
+		}
 	}
-	return DBUrl
+
+	return dbUrl
 }
 
 func NewPool(ctx context.Context, connString string) (*pgxpool.Pool, error) {
