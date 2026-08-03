@@ -33,5 +33,5 @@ services:
 databases:
   - name: golibrary-db
     databaseName: golibrary
-    user: postgres
+    user: golibrary_user
     plan: free
