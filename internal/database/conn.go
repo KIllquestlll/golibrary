@@ -17,7 +17,7 @@ func Load() string {
 	}
 	DBUrl := os.Getenv("DATABASE_URL")
 	if DBUrl == "" {
-		log.Fatal("Переменная пустая!")
+		// log.Fatal("Переменная пустая!")
 	}
 	return DBUrl
 }
