@@ -28,6 +28,10 @@ func main() {
 	if err != nil {
 		log.Fatal("Ошика подлючения к бд!", err)
 	}
+
+	if err := database.InitTables(ctx, pool); err != nil {
+		log.Fatalf("Ошибка миграции: %v", err)
+	}
 	defer pool.Close()
 
 	// Helper handlers

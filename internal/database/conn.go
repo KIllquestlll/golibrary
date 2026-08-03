@@ -64,3 +64,22 @@ func NewPool(ctx context.Context, connString string) (*pgxpool.Pool, error) {
 	}
 	return pool, nil
 }
+
+func InitTables(ctx context.Context, pool *pgxpool.Pool) error {
+	query := `
+	CREATE TABLE IF NOT EXISTS authors (
+		id SERIAL PRIMARY KEY,
+		username VARCHAR(100) NOT NULL,
+		email VARCHAR(100) UNIQUE NOT NULL,
+		password VARCHAR(255) NOT NULL,
+		created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+	);`
+
+	_, err := pool.Exec(ctx, query)
+	if err != nil {
+		return fmt.Errorf("не удалось создать таблицу authors: %w", err)
+	}
+
+	log.Println("Таблицы успешно инициализированы!")
+	return nil
+}
